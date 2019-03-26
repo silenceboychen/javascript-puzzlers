@@ -136,3 +136,276 @@ Math.pow(9, 1)    // 9
 答案为：an error
 
 ---
+
+**4、What is the result of this expression? (or multiple ones)**
+
+```      
+var val = 'smtg';
+console.log('Value is ' + (val === 'smtg') ? 'Something' : 'Nothing');
+        
+A. Value is Something
+B. Value is Nothing
+C. NaN
+D. other
+```
+
+答案： D
+
+**解析：**
+
+主要靠运算符优先级，简单来说就是+的优先级大于？
+
+所以原题等价于：
+
+```
+console.log('Value is true' ? 'Something' : 'Nothing')
+```
+答案应该是 ``Something``
+
+---
+
+**5、What is the result of this expression? (or multiple ones)**
+
+```     
+var name = 'World!';
+(function () {
+    if (typeof name === 'undefined') {
+        var name = 'Jack';
+        console.log('Goodbye ' + name);
+    } else {
+        console.log('Hello ' + name);
+    }
+})();
+        
+A. Goodbye Jack
+B. Hello Jack
+C. Hello undefined
+D. Hello World
+```
+
+答案： A
+
+**解析：**
+
+在javascript里，声明变量或函数会被提升，就是说，变量提升是JavaScript将声明移至作用域 scope (全局域或者当前函数作用域) 顶部的行为。
+
+但是javascript只提升声明，而不是初始化，如果使用一个在已经使用后才声明和初始化的值，这个值将是``undefined``.
+
+所以这题就相当于：
+
+```
+var name = 'World!';
+(function () {
+    var name;
+    if (typeof name === 'undefined') {
+        name = 'Jack';
+        console.log('Goodbye ' + name);
+    } else {
+        console.log('Hello ' + name);
+    }
+})();
+```
+
+---
+
+**6、What is the result of this expression? (or multiple ones)**
+
+```
+var END = Math.pow(2, 53);
+var START = END - 100;
+var count = 0;
+for (var i = START; i <= END; i++) {
+    count++;
+}
+console.log(count);
+        
+A. 0
+B. 100
+C. 101
+D. other
+```
+
+答案： D
+
+**解析：**
+
+2的53次方是js能正确计算且不失精度的最大整数，可以参见js权威指南。
+js中可以表示的最大整数不是2的53次方，而是1.7976931348623157e+308。
+
+``Math.pow(2, 53) = 9007199254740992。``最大值加1还是``9007199254740992``，所以这个循环会一直下去
+
+``9007199254740992 +1``还是 ``9007199254740992`` ，这就是因为精度问题，如果 ``9007199254740992 +11``或者 ``9007199254740992 +111``的话，值是会发生改变的，只是这时候计算的结果不是正确的值，就是因为精度丢失的问题。
+
+---
+
+**7、What is the result of this expression? (or multiple ones)**
+
+```
+var ary = [0,1,2];
+ary[10] = 10;
+ary.filter(function(x) { return x === undefined;});
+        
+A. [undefined × 7]
+B. [0, 1, 2, 10]
+C. []
+D. [undefined]
+```
+
+答案： C
+
+**解析：**
+
+这里先科普一下``Array.filter()``:
+
+```
+var newArray = array.filter(function(currentValue,index,arr), thisValue)
+```
+``filter()`` 方法创建一个新的数组，新数组中的元素是通过检查指定数组中符合条件的所有元素。
+
+``filter``接收两个参数， 一个回调函数，一个是可选的回调函数的this值，默认为undefined
+
+回调函数依次接收三个参数：
+
+* 必须。当前元素的值
+
+* 可选。当期元素的索引值
+
+* 可选。当期元素属于的数组对象
+
+再说稀疏矩阵，当你取数组中某个没有定义的数时：
+
+```
+arr[4] // undefined
+```
+但是当你遍历它时,你会发现,它并没有元素。JavaScript会跳过这些缝隙.
+
+所以答案为： []
+
+---
+
+**8、What is the result of this expression? (or multiple ones)**
+
+```
+var two   = 0.2
+var one   = 0.1
+var eight = 0.8
+var six   = 0.6
+[two - one == one, eight - six == two]
+        
+A. [true, true]
+B. [false, false]
+C. [true, false]
+D. other
+```
+
+答案： C（笔者认为答案为B）
+
+**解析：**
+
+IEEE 754标准中的浮点数并不能精确地表达小数
+
+根据计算机内二进制的计算标准，二进制并不能表示上述四个小数。所以笔者认为应该都为false，但程序内部是怎么处理的，笔者也不是很清楚，希望有大神解答。
+
+附：部分二进制对应的十进制表。
+
+| 二进制数 | 对应的十进制数 |
+| :--- | :----: |
+| 0.0000 | 0 |
+| 0.0001 | 0.0625|
+| 0.0010 | 0.125 |
+| 0.0011 | 0.1875|
+| 0.0100 | 0.25  |
+| 0.0101 | 0.3125|
+| 0.0110 | 0.375|
+| 0.0111 | 0.4375|
+| 0.1000 | 0.5|
+| 0.1001 | 0.5625|
+| 0.1010 | 0.625|
+| 0.1011 | 0.6875|
+| 0.1100 | 0.75|
+| 0.1101 | 0.8125|
+| 0.1110 | 0.875|
+| 0.1111 | 0.9375|
+
+---
+
+**9、What is the result of this expression? (or multiple ones)**
+
+```
+function showCase(value) {
+    switch(value) {
+    case 'A':
+        console.log('Case A');
+        break;
+    case 'B':
+        console.log('Case B');
+        break;
+    case undefined:
+        console.log('undefined');
+        break;
+    default:
+        console.log('Do not know!');
+    }
+}
+showCase(new String('A'));
+        
+A. Case A
+B. Case B
+C. Do not know!
+D. undefined
+```
+
+答案： C
+
+**解析：**
+
+``switch`` 是严格比较, 在``switch``里，比较用的是 ``===``，``String`` 实例和 字符串不一样.
+
+```
+var s_prim = 'foo';
+var s_obj = new String(s_prim);
+
+console.log(typeof s_prim); // "string"
+console.log(typeof s_obj);  // "object"
+console.log(s_prim === s_obj); // false
+```
+
+所以答案是 ``Do not know!``
+
+---
+
+**10、What is the result of this expression? (or multiple ones)**
+
+```
+function showCase2(value) {
+    switch(value) {
+    case 'A':
+        console.log('Case A');
+        break;
+    case 'B':
+        console.log('Case B');
+        break;
+    case undefined:
+        console.log('undefined');
+        break;
+    default:
+        console.log('Do not know!');
+    }
+}
+showCase2(String('A'));
+        
+A. Case A
+B. Case B
+C. Do not know!
+D. undefined
+```
+
+答案： A
+
+**解析：**
+
+``String(x)``不创建对象，但返回一个字符串，即``typeof String(1)==="string"``
+
+所以答案为 ``Case A``
+
+---
