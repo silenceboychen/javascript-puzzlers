@@ -409,3 +409,1040 @@ D. undefined
 所以答案为 ``Case A``
 
 ---
+
+**11、What is the result of this expression? (or multiple ones)**
+
+```
+function isOdd(num) {
+    return num % 2 == 1;
+}
+function isEven(num) {
+    return num % 2 == 0;
+}
+function isSane(num) {
+    return isEven(num) || isOdd(num);
+}
+var values = [7, 4, '13', -9, Infinity];
+values.map(isSane);
+        
+A. [true, true, true, true, true]
+B. [true, true, true, true, false]
+C. [true, true, true, false, false]
+D. [true, true, false, false, false]
+```
+
+答案： C
+
+**解析：**
+
+此题等价于
+
+```
+7 % 2 => 1
+4 % 2 => 0
+'13' % 2 => 1
+-9 % % 2 => -1
+Infinity % 2 => NaN
+```
+答案 [true, true, true, false, false]
+
+---
+
+**12、What is the result of this expression? (or multiple ones)**
+
+```
+parseInt(3, 8)
+parseInt(3, 2)
+parseInt(3, 0)
+        
+A. 3, 3, 3
+B. 3, 3, NaN
+C. 3, NaN, NaN
+D. other
+```
+
+答案： D
+
+**解析：**
+
+和第一题类似，参考第一题。
+
+---
+
+**13、What is the result of this expression? (or multiple ones)**
+
+```
+Array.isArray( Array.prototype )
+        
+A. true
+B. false
+C. error
+D. other
+```
+
+答案： A
+
+**解析：**
+
+鲜为人知的事实：``Array.prototype`` 本身也是一个 ``Array``。
+
+参考： [Array.prototype](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/prototype#Description)
+
+---
+
+**14、What is the result of this expression? (or multiple ones)**
+
+```
+var a = [0];
+if ([0]) {
+  console.log(a == true);
+} else {
+  console.log("wut");
+}
+        
+A. true
+B. false
+C. "wut"
+D. other
+```
+
+答案： B
+
+**解析：**
+
+> 参考： 
+> 
+> 	- [一张图彻底搞懂JavaScript的==运算](https://zhuanlan.zhihu.com/p/21650547)
+>  - [JavaScript-Equality-Table](https://dorey.github.io/JavaScript-Equality-Table/)
+
+* Boolean([0]) === true
+* [0] == true
+	* true 转换为数字 => 1
+	* [0] 转化为数字失败, 转化为字符串 '0', 转化成数字 => 0
+	* 0 !== 1
+
+所以答案为false。
+
+---
+
+**15、What is the result of this expression? (or multiple ones)**
+
+```
+[]==[]
+        
+A. true
+B. false
+C. error
+D. other
+```
+
+答案： B
+
+**解析：**
+
+``[]`` 是``Object``, 两个 ``Object`` 不相等
+
+答案是 false
+
+---
+
+**16、What is the result of this expression? (or multiple ones)**
+
+```
+'5' + 3
+'5' - 3
+        
+A. "53", 2
+B. 8, 2
+C. error
+D. other
+```
+
+答案： A
+
+**解析：**
+
+> 知识点：
+> 
+> * [Arithmetic_Operators#Addition](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Arithmetic_Operators#Addition)
+> * [Arithmetic_Operators#Subtraction](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Arithmetic_Operators#Subtraction)
+
+也就是说 - 会尽可能的将两个操作数变成数字, 而 + 如果两边不都是数字, 那么就是字符串拼接.
+
+答案是 '53', 2
+
+---
+
+**17、What is the result of this expression? (or multiple ones)**
+
+```
+1 + - + + + - + 1
+        
+A. 2
+B. 1
+C. error
+D. other
+```
+
+答案： A
+
+**解析：**
+
+这里应该从后往前计算：
+
+```
+g = + 1   => 1
+f = - (g) => -1
+e = + (f) => -1
+d = + (e) => -1
+c = + (d) => -1
+b = + (c) => -1
+a = - (b) => 1
+1 + (a)  => 2
+```
+所以答案 2
+
+---
+
+**18、What is the result of this expression? (or multiple ones)**
+
+```
+var ary = Array(3);
+ary[0]=2
+ary.map(function(elem) { return '1'; });
+        
+A. [2, 1, 1]
+B. ["1", "1", "1"]
+C. [2, "1", "1"]
+D. other
+```
+
+答案： D
+
+**解析：**
+
+稀疏数组. 同第7题.
+
+题目中的数组是一个长度为3, 但是只有一个内容的数组, array 上的操作会跳过这些未初始化的'坑'.
+
+所以答案是 ["1", empty × 2]
+
+---
+
+**19、What is the result of this expression? (or multiple ones)**
+
+```
+function sidEffecting(ary) {
+  ary[0] = ary[2];
+}
+function bar(a,b,c) {
+  c = 10
+  sidEffecting(arguments);
+  return a + b + c;
+}
+bar(1,1,1)
+        
+A. 3
+B. 12
+C. error
+D. other
+```
+
+答案： D
+
+**解析：**
+
+> 知识点:
+>
+> - [Functions/arguments](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/arguments)
+
+``arguments`` 是一个 ``object``, c 就是 ``arguments[2]``, 所以对于 c 的修改就是对 ``arguments[2]`` 的修改.
+
+所以答案是 21.
+
+当函数参数涉及到 `any rest parameters, any default parameters or any destructured parameters` 的时候, 这个 `arguments` 就不在是一个 `mapped arguments object(映射的参数对象)` 了。参考： [Rest, default, and destructured parameters](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/arguments#Rest_default_and_destructured_parameters)
+
+请看:
+
+```
+function sidEffecting(ary) {
+  ary[0] = ary[2];
+}
+function bar(a,b,c=3) {
+  c = 10
+  sidEffecting(arguments);
+  return a + b + c;
+}
+bar(1,1,1)
+```
+答案是 12 !!!!
+
+---
+
+**20、What is the result of this expression? (or multiple ones)**
+
+```
+var a = 111111111111111110000,
+    b = 1111;
+a + b;
+        
+A. 111111111111111111111
+B. 111111111111111110000
+C. NaN
+D. Infinity
+```
+
+答案： B
+
+**解析：**
+
+又是一道考查JavaScript数字的题，与第六题考察点相似。由于JavaScript实际上只有一种数字形式IEEE 754标准的64位双精度浮点数，其所能表示的整数范围为 -2^53 ~ 2^53 (包括边界值)。这里的 111111111111111110000 已经超过了2^53 次方，所以会发生精度丢失的情况。
+
+---
+
+**21、What is the result of this expression? (or multiple ones)**
+
+```
+var x = [].reverse;
+x();
+        
+A. []
+B. undefined
+C. error
+D. window
+```
+
+答案： D
+
+**解析：**
+
+这题考查的是函数调用时的`this`和`Array.prototype.reverse`方法。
+
+首先看`Array.prototype.reverse`方法，首先举几个栗子：
+
+```
+console.log(Array.prototype.reverse.call("skyinlayer"));
+//skyinlayer
+console.log(Array.prototype.reverse.call({}));
+//Object {}
+console.log(Array.prototype.reverse.call(123));
+//123
+```
+这几个栗子可以得出一个结论，`Array.prototype.reverse`方法的返回值，就是`this`.
+
+`Javascript`中`this`有如下几种情况：
+
+* 全局下this，指向window对象
+
+```
+console.log(this);
+//输出结果：
+//Window {top: Window, window: Window, location: Location, external: Object, chrome: Object…}
+```
+
+* 函数调用，this指向全局window对象：
+
+```
+function somefun(){
+    console.log(this);
+}
+somefun();
+//输出结果：
+//Window {top: Window, window: Window, location: Location, external: Object, chrome: Object…}
+```
+
+* 方法调用，this指向拥有该方法的对象：
+
+```
+var someobj = {};
+someobj.fun = function(){
+    console.log(this);
+};
+console.log(someobj.fun());
+//输出结果：
+//Object {fun: function}
+```
+
+* 调用构造函数，构造函数内部的this指向新创建对象：
+
+```
+function Con() {
+    console.log(this);
+}
+Con.prototype.somefun = function(){};
+console.log(new Con());
+//输出结果：
+//Con {somefun: function}
+```
+
+这里可以看到，使用的是函数调用方式，this指向的是全局对象window，所以选D.
+
+---
+
+**22、What is the result of this expression? (or multiple ones)**
+
+```
+Number.MIN_VALUE > 0
+        
+A. false
+B. true
+C. error
+D. other
+```
+
+答案： B
+
+**解析：**
+
+考查的`Number.MIN_VALUE`的概念，[MDN传送门](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/MIN_VALUE)，关键的几句话:
+
+- The `Number.MIN_VALUE` property represents the smallest positive numeric value representable in JavaScript. (`Number.MIN_VALUE`表示的是JavaScript中最小的正数)
+
+- The `MIN_VALUE` property is the number closest to 0, not the most negative number, that JavaScript can represent. (`MIN_VALUE`是接近0的数，而不是最小的数)
+
+- `MIN_VALUE` has a value of approximately 5e-324. Values smaller than MIN_VALUE ("underflow values") are converted to 0. (`MIN_VALUE`值约等于5e-324，比起更小的值（大于0），将被转换为0)
+
+所以，这里是true，选B
+
+顺带把`Number`的几个常量拉出来：
+
+* `Number.MAX_VALUE`：最大的正数
+* `Number.MIN_VALUE`：最小的正数
+* `Number.NaN`：特殊值，用来表示这不是一个数
+* `Number.NEGATIVE_INFINITY`：负无穷大
+* `Number.POSITIVE_INFINITY`：正无穷大
+
+如果要表示最小的负数和最大的负数，可以使用`-Number.MAX_VALUE`和`-Number.MIN_VALUE`
+
+---
+
+**23、What is the result of this expression? (or multiple ones)**
+
+```
+[1 < 2 < 3, 3 < 2 < 1]
+        
+A. [true, true]
+B. [true, false]
+C. error
+D. other
+```
+
+答案： A
+
+**解析：**
+
+运算符的运算顺序和隐式类型转换的题，'<'运算符顺序是从左到右，所以变成了`[true < 3, false < 1]`
+
+接着进行隐式类型转换，'<'操作符的转换规则:
+
+* 如果两个操作值都是数值，则进行数值比较
+* 如果两个操作值都是字符串，则比较字符串对应的字符编码值
+* 如果只有一个操作值是数值，则将另一个操作值转换为数值，进行数值比较
+* 如果一个操作数是对象，则调用valueOf()方法（如果对象没有valueOf()方法则调用toString()方法），得到的结果按照前面的规则执行比较
+* 如果一个操作值是布尔值，则将其转换为数值，再进行比较
+
+所以，这里首先通过`Number()`转换为数字然后进行比较，true会转换成1，而false转换成0，就变成了`[1 < 3, 0 < 1]`
+
+所以结果为A.
+
+---
+
+**24、What is the result of this expression? (or multiple ones)**
+
+```
+// the most classic wtf
+2 == [[[2]]]
+        
+A. true
+B. false
+C. undefined
+D. other
+```
+
+答案： A
+
+**解析：**
+
+这里首先需要对`==`右边的数组进行类型转换，根据以下规则（来自[justjavac的文章《「译」JavaScript 的怪癖 1：隐式类型转换》](https://justjavac.iteye.com/blog/1848749)）：
+
+1. 调用 `valueOf()`。如果结果是原始值（不是一个对象），则将其转换为一个数字。
+2. 否则，调用 `toString()` 方法。如果结果是原始值，则将其转换为一个数字。
+3. 否则，抛出一个类型错误。
+
+所以右侧被使用`toString()`方法转换为"2"，然后又通过`Number("2")`转换为数字2进行比较，结果就是`true`了，选A.
+
+---
+
+**25、What is the result of this expression? (or multiple ones)**
+
+```
+3.toString()
+3..toString()
+3...toString()
+        
+A. "3", error, error
+B. "3", "3.0", error
+C. error, "3", error
+D. other
+```
+
+答案： C
+
+**解析：**
+
+很多人都踩过`3.toString()`的坑, 虽然`JavaScript`会在调用方法时对原始值进行包装，但是这个点是小数点呢、还是方法调用的点呢，于是乎第一个就是`error`了，因为`JavaScript`解释器会将其认为是小数点。
+
+而第二个则很好说通了，第一个点解释为小数点，变成了`(3.0).toString()`，结果就是"3"了
+
+第三个也是，第一个点为小数点，第二个是方法调用的点，但是后面接的不是一个合法的方法名，于是乎就error了
+
+综上，选C
+
+---
+
+**26、What is the result of this expression? (or multiple ones)**
+
+```
+(function(){
+  var x = y = 1;
+})();
+console.log(y);
+console.log(x);
+        
+A. 1, 1
+B. error, error
+C. 1, error
+D. other
+```
+
+答案： C
+
+**解析：**
+
+变量提升和隐式定义全局变量的题，也是一个JavaScript经典的坑...
+
+还是那句话，在作用域内，变量定义和函数定义会先行提升，所以里面就变成了:
+
+```
+(function(){
+    var x;
+    y = 1;
+    x = 1;
+})();
+```
+这点会问了，为什么不是`var x, y;`，这就是坑的地方...这里只会定义第一个变量`x`，而`y`则会通过不使用`var`的方式直接使用，于是乎就隐式定义了一个全局变量`y`
+
+所以，`y`是全局作用域下，而`x`则是在函数内部，结果就为`1, error`，选C.
+
+---
+
+**27、What is the result of this expression? (or multiple ones)**
+
+```
+var a = /123/,
+    b = /123/;
+a == b
+a === b
+        
+A. true, true
+B. true, false
+C. false, false
+D. other
+```
+
+答案： C
+
+**解析：**
+
+首先需要明确JavaScript的正则表达式是什么。JavaScript中的正则表达式依旧是对象，使用`typeof`运算符就能得出结果：
+
+```
+console.log(typeof /123/);
+//输出结果：
+//"object"
+```
+`==`运算符左右两边都是对象时，会比较他们是否指向同一个对象，可以理解为C语言中两个指针的值是否一样（指向同一片内存），所以两个结果自然都是`false`.
+
+---
+
+**28、What is the result of this expression? (or multiple ones)**
+
+```
+var a = [1, 2, 3],
+    b = [1, 2, 3],
+    c = [1, 2, 4]
+a ==  b
+a === b
+a >   c
+a <   c
+        
+A. false, false, false, true
+B. false, false, false, false
+C. true, true, false, true
+D. other
+```
+
+答案： A
+
+**解析：**
+
+和上题类似，JavaScript中`Array`的本质也是对象，所以前两个的结果都是`false`，
+
+而JavaScript中`Array`的`>`运算符和`<`运算符的比较方式类似于字符串比较字典序，会从第一个元素开始进行比较，如果一样比较第二个，还一样就比较第三个，如此类推，所以第三个结果为`false`，第四个为`true`。
+
+综上所述，结果为`false, false, false, true`，选A
+
+---
+
+**29、What is the result of this expression? (or multiple ones)**
+
+```
+var a = {}, b = Object.prototype;
+[a.prototype === b, Object.getPrototypeOf(a) === b]
+        
+A. [false, true]
+B. [true, true]
+C. [false, false]
+D. other
+```
+
+答案： A
+
+**解析：**
+
+考查的`__proto__`和`prototype`的区别。首先要明确对象和构造函数的关系，对象在创建的时候，其`__proto__`会指向其构造函数的`prototype`属性
+
+`Object`实际上是一个构造函数（`typeof Object`的结果为`function`）,使用字面量创建对象和`new Object`创建对象是一样的，所以`a.__proto__`也就是`Object.prototype`，而`Object.getPrototypeOf(a)`与`a.__proto__`是一样的，所以第二个结果为`true`.
+
+而实例对象是没有`prototype`属性的，只有函数才有，所以`a.prototype`其实是`undefined`，第一个结果为`false`.
+
+综上，选A
+
+---
+
+**30、What is the result of this expression? (or multiple ones)**
+
+```
+function f() {}
+var a = f.prototype, b = Object.getPrototypeOf(f);
+a === b
+        
+A. true
+B. false
+C. null
+D. other
+```
+
+答案： B
+
+**解析：**
+
+还是`__proto__`和`prototype`的区别，两者不是一个东西，所以选B.
+
+`f.prototype` 是使用使用 `new` 创建的 `f` 实例的原型. 而 `Object.getPrototypeOf` 是 `f` 函数的原型.
+
+请看:
+
+```
+a === Object.getPrototypeOf(new f()) // true
+b === Function.prototype // true
+```
+
+---
+
+**31、What is the result of this expression? (or multiple ones)**
+
+```
+function foo() { }
+var oldName = foo.name;
+foo.name = "bar";
+[oldName, foo.name]
+        
+A. error
+B. ["", ""]
+C. ["foo", "foo"]
+D. ["foo", "bar"]
+```
+
+答案： C
+
+**解析：**
+
+> [Function.prototype.name
+](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/name)
+
+考察了函数的`name`属性，使用函数定义方式时，会给`function`对象本身添加一个`name`属性，保存了函数的名称，很好理解`oldName`为`foo`。`name`属性时只读的，不允许修改，所以`foo.name = "bar";`之后，`foo.name`还是`foo`，所以结果为`["foo", "foo"]`，选C。
+
+---
+
+**32、What is the result of this expression? (or multiple ones)**
+
+```
+"1 2 3".replace(/\d/g, parseInt)
+        
+A. "1 2 3"
+B. "0 1 2"
+C. "NaN 2 3"
+D. "1 NaN 3"
+```
+
+答案： D
+
+**解析：**
+
+首先需要确定`replace`会传给`parseInt`哪些参数。举个栗子：
+
+```
+"1 2 3".replace(/\d/g, function(){
+    console.log(arguments);
+});
+//输出结果：
+//["1", 0, "1 2 3"]
+//["2", 2, "1 2 3"]
+//["3", 4, "1 2 3"] 
+```
+一共三个：
+
+1. match：正则表达式被匹配到的子字符串
+2. offset：被匹配到的子字符串在原字符串中的位置
+3. string：原字符串
+
+这样就很好理解了，又回到之前`parseInt`的问题了，结果就是
+
+```
+parseInt("1", 10), 
+parseInt("2", 2), 
+parseInt("3", 4)
+```
+所以结果为`"1, NaN, 3"`，选D
+
+---
+
+**33、What is the result of this expression? (or multiple ones)**
+
+```
+function f() {}
+var parent = Object.getPrototypeOf(f);
+f.name // ?
+parent.name // ?
+typeof eval(f.name) // ?
+typeof eval(parent.name) //  ?
+        
+A. "f", "Empty", "function", "function"
+B. "f", undefined, "function", error
+C. "f", "Empty", "function", error
+D. other
+```
+
+答案： C
+
+**解析：**
+
+又是`Function.name`属性的题，和31题一样，`f.name`值为`"f"`，而`eval("f")`则会输出`f`函数，所以结果为`"function"`
+
+接着看`parent`，`parent`实际上就是`f.__proto__`，需要明确的是JavaScript中的函数也是对象，其也有自己的构造函数Function，所以`f.__proto__ === Function.prototype`结果是`true`，而`Function.prototype`就是一个名为`Empty`的`function`.
+
+```
+console.log(Function.prototype);
+console.log(Function.prototype.name);
+//输出结果：
+//function Empty() {}
+//Empty
+```
+
+所以`parent.name`的值为`Empty`
+
+如果想直接在全局作用域下调用`Empty`，显示未定义,因为`Empty`并不在全局作用域下
+
+综上所述，结果为C
+
+---
+
+**34、What is the result of this expression? (or multiple ones)**
+
+```
+var lowerCaseOnly =  /^[a-z]+$/;
+[lowerCaseOnly.test(null), lowerCaseOnly.test()]
+        
+A. [true, false]
+B. error
+C. [true, true]
+D. [false, true]
+```
+
+答案： C
+
+**解析：**
+
+> [RegExp.prototype.test](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp/test)
+
+正则表达式的`test`方法会自动将参数转换为字符串，原式就变成了`[lowerCaseOnly.test("null"), lowerCaseOnly.test("undefined")]`，结果都是真，所以选C.
+
+---
+
+**35、What is the result of this expression? (or multiple ones)**
+
+```
+[,,,].join(", ")
+        
+A. ", , , "
+B. "undefined, undefined, undefined, undefined"
+C. ", , "
+D. ""
+```
+
+答案： C
+
+**解析：**
+
+因为javascript 在定义数组的时候允许最后一个元素后跟一个`,`, 所以这是个长度为三的稀疏数组(这是长度为三, 并没有 0, 1, 2三个属性哦).
+
+而三个元素，使用`join`方法，只需要添加两次，所以结果为", , "，选C.
+
+---
+
+**36、What is the result of this expression? (or multiple ones)**
+
+```
+var a = {class: "Animal", name: 'Fido'};
+a.class
+        
+A. "Animal"
+B. Object
+C. an error
+D. other
+```
+
+答案： D
+
+**解析：**
+
+经典坑中的一个，class是关键字。根据浏览器的不同，结果不同：
+
+* chrome的结果： "Animal"
+* Firefox的结果："Animal"
+* Opera的结果："Animal"
+* IE 8以上也是： "Animal"
+* IE 8 及以下： 报错
+
+---
+
+**37、What is the result of this expression? (or multiple ones)**
+
+```
+var a = new Date("epoch")
+        
+A. Thu Jan 01 1970 01:00:00 GMT+0100 (CET)
+B. current time
+C. error
+D. other
+```
+
+答案： D
+
+**解析：**
+
+> * [Date](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date)
+> * [Date/pares](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/parse)
+
+简单来说, 如果调用 Date 的构造函数传入一个字符串的话需要符合规范, 即满足 `Date.parse` 的条件.
+
+另外需要注意的是 如果格式错误 构造函数返回的仍是一个`Date` 的实例 `Invalid Date`.
+
+答案 `Invalid Date`
+
+---
+
+**38、What is the result of this expression? (or multiple ones)**
+
+```
+var a = Function.length,
+    b = new Function().length
+a === b
+        
+A. true
+B. false
+C. error
+D. other
+```
+
+答案： B
+
+**解析：**
+
+> [Function.length](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Function/length#Description)
+
+我们知道一个`function()`的 `length` 属性就是函数签名的参数个数, 所以 `b.length == 0`.
+
+`Function` 构造器本身也是个`Function`。他的 `length` 属性值为 1 。该属性 `Writable: false, Enumerable: false, Configurable: true`.
+
+---
+
+** 39、What is the result of this expression? (or multiple ones)**
+
+```
+var a = Date(0);
+var b = new Date(0);
+var c = new Date();
+[a === b, b === c, a === c]
+        
+A. [true, true, true]
+B. [false, false, false]
+C. [false, true, false]
+D. [true, false, false]
+```
+
+答案： B
+
+**解析：**
+
+还是关于Date 的题, 需要注意的是：
+
+* 如果不传参数等价于当前时间.
+* 如果是函数调用 返回一个字符串.
+
+---
+
+**40、What is the result of this expression? (or multiple ones)**
+
+```
+var min = Math.min(), max = Math.max()
+min < max
+        
+A. true
+B. false
+C. error
+D. other
+```
+
+答案： B
+
+**解析：**
+
+> * [Math.min](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/min)
+> * [Math.max](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/max)
+
+`Math.min` 不传参数返回 `Infinity`, `Math.max` 不传参数返回 `-Infinity`.
+
+---
+
+**41、What is the result of this expression? (or multiple ones)**
+
+```
+function captureOne(re, str) {
+  var match = re.exec(str);
+  return match && match[1];
+}
+var numRe  = /num=(\d+)/ig,
+    wordRe = /word=(\w+)/i,
+    a1 = captureOne(numRe,  "num=1"),
+    a2 = captureOne(wordRe, "word=1"),
+    a3 = captureOne(numRe,  "NUM=2"),
+    a4 = captureOne(wordRe,  "WORD=2");
+[a1 === a2, a3 === a4]
+        
+A. [true, true]
+B. [false, false]
+C. [true, false]
+D. [false, true]
+```
+
+答案： C
+
+**解析：**
+
+因为第一个正则有一个 `g` 选项 它会 **记忆** 他所匹配的内容, 等匹配后他会从上次匹配的索引继续, 而第二个正则不会.
+
+举个例子:
+
+```
+var myRe = /ab*/g;
+var str = 'abbcdefabh';
+var myArray;
+while ((myArray = myRe.exec(str)) !== null) {
+  var msg = 'Found ' + myArray[0] + '. ';
+  msg += 'Next match starts at ' + myRe.lastIndex;
+  console.log(msg);
+}
+// Found abb. Next match starts at 3
+// Found ab. Next match starts at 9
+```
+所以 a1 = '1'; a2 = '1'; a3 = null; a4 = '2'.
+
+---
+
+**42、What is the result of this expression? (or multiple ones)**
+
+```
+var a = new Date("2014-03-19"),
+    b = new Date(2014, 03, 19);
+[a.getDay() === b.getDay(), a.getMonth() === b.getMonth()]
+        
+A. [true, true]
+B. [true, false]
+C. [false, true]
+D. [false, false]
+```
+
+答案： D
+
+**解析：**
+
+> * [Date](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Date)
+
+当Date作为构造函数调用并传入多个参数时，如果数值大于合理范围时（如月份为13或者分钟数为70），相邻的数值会被调整。比如 `new Date(2013, 13, 1)`等于`new Date(2014, 1, 1)`，它们都表示日期`2014-02-01`（注意月份是从0开始的）。其他数值也是类似，`new Date(2013, 2, 1, 0, 70)`等于`new Date(2013, 2, 1, 1, 10)`，都表示时间`2013-03-01T01:10:00`。
+
+此外，`getDay` 返回指定日期对象的星期中的第几天（0～6），所以，你懂的。
+
+---
+
+**43、What is the result of this expression? (or multiple ones)**
+
+```
+if ('http://giftwrapped.com/picture.jpg'.match('.gif')) {
+  'a gif file'
+} else {
+  'not a gif file'
+}
+        
+A. 'a gif file'
+B. 'not a gif file'
+C. error
+D. other
+```
+
+答案： A
+
+**解析：**
+
+> 如果传入一个非正则表达式对象，则会隐式地使用 new RegExp(obj)
+将其转换为正则表达式对象。
+
+所以我们的字符串 `".gif"` 会被转换成正则对象 `/.gif/`，会匹配到 `"/gif"`。
+
+---
+
+**44、What is the result of this expression? (or multiple ones)**
+
+```
+function foo(a) {
+    var a;
+    return a;
+}
+function bar(a) {
+    var a = 'bye';
+    return a;
+}
+[foo('hello'), bar('hello')]
+        
+A. ["hello", "hello"]
+B. ["hello", "bye"]
+C. ["bye", "bye"]
+D. other
+```
+
+答案： B
+
+**解析：**
+
+一个变量在同一作用域中已经声明过，会自动移除 var 声明，但是赋值操作依旧保留，结合前面提到的变量提升机制，你就明白了。
