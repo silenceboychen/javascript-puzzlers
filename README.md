@@ -1446,3 +1446,37 @@ D. other
 **解析：**
 
 一个变量在同一作用域中已经声明过，会自动移除 var 声明，但是赋值操作依旧保留，结合前面提到的变量提升机制，你就明白了。
+
+---
+
+**45、输出以下代码执行的结果并解释为什么**
+
+```
+var obj = {
+    '2': 3,
+    '3': 4,
+    'length': 2,
+    'splice': Array.prototype.splice,
+    'push': Array.prototype.push
+}
+obj.push(1)
+obj.push(2)
+console.log(obj)
+```
+答案： 
+
+```
+{ '2': 1,
+  '3': 2,
+  length: 4,
+  splice: [Function: splice],
+  push: [Function: push] }
+```
+
+**解析：**
+
+> push 方法有意具有通用性。该方法和 call() 或 apply() 一起使用时，可应用在类似数组的对象上。push 方法根据 length 属性来决定从哪里开始插入给定的值。如果 length 不能被转成一个数值，则插入的元素索引为 0，包括 length 不存在时。当 length 不存在时，将会创建它。
+
+例子中的 `length` 属性值为 2，意味着 将从属性为 2 的地方开始增加键值对，正巧 `obj` 有一个 '2' 属性了，所以 `obj.push(1)` 会将其属性值覆盖成 1，并且 `length` 属性的属性值变成 3，第二个 `push` 同样，将 '3' 的属性值覆盖成 2，同时 `length` 变成 4
+
+ `length` 变成了 4，所以索引为 0 和 1 会变成 `empty`。
