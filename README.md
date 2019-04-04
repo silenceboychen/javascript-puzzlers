@@ -1480,3 +1480,15 @@ console.log(obj)
 例子中的 `length` 属性值为 2，意味着 将从属性为 2 的地方开始增加键值对，正巧 `obj` 有一个 '2' 属性了，所以 `obj.push(1)` 会将其属性值覆盖成 1，并且 `length` 属性的属性值变成 3，第二个 `push` 同样，将 '3' 的属性值覆盖成 2，同时 `length` 变成 4
 
  `length` 变成了 4，所以索引为 0 和 1 会变成 `empty`。
+
+ ---
+
+ ** 46、如何实现一个new?**
+
+```
+function _new(fn, ...arg) {
+    const obj = Object.create(fn.prototype);
+    const ret = fn.apply(obj, arg);
+    return ret instanceof Object ? ret : obj;
+}
+```
